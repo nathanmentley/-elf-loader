@@ -40,6 +40,8 @@ int process(
  * @return result code of the application run
  */
 int main(int argc, const char * argv[]) {
+    //TODO: Setup argument parsing.
+
     //TODO: Setup a plugin system.
     //  Besides the modules knowing about themselves in their code, this method is the only place that
     //  knows about anything outside of the core namespace. So if we pull these loaders dynamically,

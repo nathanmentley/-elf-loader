@@ -98,6 +98,16 @@ namespace Elf64
                 throw ElfParsingException();
             }
 
+            void* getBinaryData()
+            {
+                return binary.data();
+            }
+
+            std::vector<Core::BinaryBlobDef> getBinaryBlobs()
+            {
+                return std::vector<Core::BinaryBlobDef>();
+            }
+
             void printDetails()
             {
                 std::cout << "\n\nelf header: \n\n"

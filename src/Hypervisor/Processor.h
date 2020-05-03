@@ -54,13 +54,10 @@ namespace Hypervisor
             void loadBinary(Core::IBinary* binary)
             {
                 binary->printDetails();
-            }
-            /*
-            void loadElf64Binary(ElfLoader::Elf64* binary)
-            {
-                for(auto& sh: binary->section_headers)
+
+                for(auto blob: binary->getBinaryBlobs())
                 {
-                    auto memory = valloc(sh->sh_size);
+                    auto memory = valloc(blob.length);
 
                     //TODO: Setup Flags
                     //TODO: Copy section into buffer, and map that to the vm
@@ -69,16 +66,17 @@ namespace Hypervisor
                     if (
                         hv_vm_map(
                             memory,
-                            sh->sh_addr,
-                            sh->sh_size,
+                            blob.target,
+                            blob.length,
                             HV_MEMORY_READ | HV_MEMORY_WRITE | HV_MEMORY_EXEC
                         )
                     )
                     {
                         //abort();
                     }
+
                 }
-            }*/
+            }
 
             std::future<int> runAsync(Core::IKernel* kernel)
             {
