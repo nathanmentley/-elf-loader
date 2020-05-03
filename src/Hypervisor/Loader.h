@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../Core/BasePluginLoader.h"
 #include "../Core/IProcessorLoader.h"
 
 #include "Config.h"
@@ -15,17 +16,21 @@
 
 namespace Hypervisor
 {
-    class Loader: public Core::IProcessorLoader<Config>
+    class Loader:
+        public Core::BasePluginLoader<Core::IProcessor, Config>,
+        public Core::IProcessorLoader
     {
         public:
-            std::unique_ptr<Core::IProcessor> load(Config* config)
+            Loader(Config* config): BasePluginLoader(config) {}
+
+            std::unique_ptr<Core::IProcessor> load()
             {
                 return Processor::create();
             }
 
-            std::future<std::unique_ptr<Core::IProcessor>> loadAsync(Config* config)
+            std::future<std::unique_ptr<Core::IProcessor>> loadAsync()
             {
-                return std::async(std::launch::async, &Loader::load, this, config);
+                return std::async(std::launch::async, &Loader::load, this);
             }
 
             ~Loader() {}

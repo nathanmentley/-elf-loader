@@ -6,6 +6,7 @@
 //  Copyright © 2020 Nathan Mentley. All rights reserved.
 //
 
+#include "../Core/BasePluginLoader.h"
 #include "../Core/IBinaryLoader.h"
 
 #include "Binary.h"
@@ -13,14 +14,19 @@
 
 namespace Elf64
 {
-    class Loader: public Core::IBinaryLoader<Config> {
+    class Loader:
+        public Core::BasePluginLoader<Core::IBinary, Config>,
+        public Core::IBinaryLoader
+    {
         public:
-            std::future<std::unique_ptr<Core::IBinary>> loadAsync(Config* config)
+            Loader(Config* config): BasePluginLoader(config) {}
+
+            std::future<std::unique_ptr<Core::IBinary>> loadAsync()
             {
-                return std::async(std::launch::async, &Loader::load, this, config);
+                return std::async(std::launch::async, &Loader::load, this);
             }
 
-            std::unique_ptr<Core::IBinary> load(Config* config)
+            std::unique_ptr<Core::IBinary> load()
             {
                 return Binary::load(config->getFilename());
             }

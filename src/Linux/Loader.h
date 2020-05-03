@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../Core/BasePluginLoader.h"
 #include "../Core/IKernelLoader.h"
 
 #include "Config.h"
@@ -15,17 +16,21 @@
 
 namespace Linux
 {
-    class Loader: public Core::IKernelLoader<Config>
+    class Loader:
+        public Core::BasePluginLoader<Core::IKernel, Config>,
+        public Core::IKernelLoader
     {
         public:
-            std::unique_ptr<Core::IKernel> load(Config* config)
+            Loader(Config* config): BasePluginLoader(config) {}
+
+            std::unique_ptr<Core::IKernel> load()
             {
                 return Kernel::create();
             }
 
-            std::future<std::unique_ptr<Core::IKernel>> loadAsync(Config* config)
+            std::future<std::unique_ptr<Core::IKernel>> loadAsync()
             {
-                return std::async(std::launch::async, &Loader::load, this, config);
+                return std::async(std::launch::async, &Loader::load, this);
             }
 
             ~Loader() {}

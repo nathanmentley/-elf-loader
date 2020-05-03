@@ -16,7 +16,7 @@
 
 namespace Core
 {
-    template <class TPlugin, class TPluginConfig>
+    template <class TPlugin>
     class IPluginLoader
     {
         public:
@@ -25,14 +25,11 @@ namespace Core
                     std::is_base_of<IPlugin, TPlugin>::value,
                     "type parameter TPlugin must derive from IPlugin"
                 );
-                static_assert(
-                    std::is_base_of<IPluginConfig, TPluginConfig>::value,
-                    "type parameter TPluginConfig must derive from IPluginConfig"
-                );
             }
 
-            virtual std::unique_ptr<TPlugin> load(TPluginConfig* config) = 0;
-            virtual std::future<std::unique_ptr<TPlugin>> loadAsync(TPluginConfig* config) = 0;
+            virtual std::unique_ptr<TPlugin> load() = 0;
+            virtual std::future<std::unique_ptr<TPlugin>> loadAsync() = 0;
+
             virtual ~IPluginLoader() {}
     };
 }

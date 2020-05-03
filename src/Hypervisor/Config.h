@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "../Core/IProcessorConfig.h"
+#include "../Core/IPluginConfig.h"
 
 namespace Hypervisor
 {
-    class Config: public Core::IProcessorConfig {
+    class Config: public Core::IPluginConfig {
         public:
             Config()
             {

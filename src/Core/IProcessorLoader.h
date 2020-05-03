@@ -10,21 +10,13 @@
 
 #include "IPluginLoader.h"
 #include "IProcessor.h"
-#include "IProcessorConfig.h"
 
 namespace Core
 {
-    template <class TPluginConfig>
-    class IProcessorLoader: public IPluginLoader<IProcessor, TPluginConfig>
+    class IProcessorLoader: public IPluginLoader<IProcessor>
     {
         public:
-            IProcessorLoader()
-            {
-                static_assert(
-                    std::is_base_of<IProcessorConfig, TPluginConfig>::value,
-                    "type parameter TPluginConfig must derive from IPluginConfig"
-                );
-            }
+            IProcessorLoader() {}
             virtual ~IProcessorLoader() {}
     };
 }

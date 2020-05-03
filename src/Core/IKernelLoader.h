@@ -9,22 +9,14 @@
 #pragma once
 
 #include "IKernel.h"
-#include "IKernelConfig.h"
 #include "IPluginLoader.h"
 
 namespace Core
 {
-    template <class TPluginConfig>
-    class IKernelLoader: public IPluginLoader<IKernel, TPluginConfig>
+    class IKernelLoader: public IPluginLoader<IKernel>
     {
         public:
-            IKernelLoader()
-            {
-                static_assert(
-                    std::is_base_of<IKernelConfig, TPluginConfig>::value,
-                    "type parameter TPluginConfig must derive from IPluginConfig"
-                );
-            }
+            IKernelLoader() {}
             virtual ~IKernelLoader() {}
     };
 }

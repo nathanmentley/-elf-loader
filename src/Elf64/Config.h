@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "../Core/IBinaryConfig.h"
+#include "../Core/IPluginConfig.h"
 
 namespace Elf64
 {
-    class Config: public Core::IBinaryConfig {
+    class Config: public Core::IPluginConfig {
         public:
             Config(const char* _filename): filename(_filename) {}
             ~Config() {}

@@ -12,22 +12,14 @@
 #include <future>
 
 #include "IBinary.h"
-#include "IBinaryConfig.h"
 #include "IPluginLoader.h"
 
 namespace Core
 {
-    template <class TPluginConfig>
-    class IBinaryLoader: public IPluginLoader<IBinary, TPluginConfig>
+    class IBinaryLoader: public IPluginLoader<IBinary>
     {
         public:
-            IBinaryLoader()
-            {
-                static_assert(
-                    std::is_base_of<IBinaryConfig, TPluginConfig>::value,
-                    "type parameter TPluginConfig must derive from IPluginConfig"
-                );
-            }
+            IBinaryLoader() {}
             virtual ~IBinaryLoader() {}
     };
 }

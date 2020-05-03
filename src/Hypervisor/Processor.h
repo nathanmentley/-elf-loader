@@ -15,6 +15,9 @@
 #include <Hypervisor/hv.h>
 #include <Hypervisor/hv_vmx.h>
 
+#include "../Core/Exceptions/ProcessorBinaryShutdownException.h"
+#include "../Core/Exceptions/ProcessorBinaryStartupException.h"
+#include "../Core/Exceptions/ProcessorStartupException.h"
 #include "../Core/IProcessor.h"
 
 namespace Hypervisor
@@ -36,31 +39,28 @@ namespace Hypervisor
 
             ~Processor()
             {
-                if (hv_vcpu_destroy(vcpu)) {
-                    //abort();
-                }
+                if (hv_vcpu_destroy(vcpu))
+                    {}//throw Core::Exceptions::ProcessorBinaryShutdownException();
 
                 /*
-                if (hv_vm_unmap(0, memsize)) {
-                    //abort();
-                }
+                if (hv_vm_unmap(0, memsize))
+                    throw Core::Exceptions::ProcessorBinaryShutdownException();
                 */
 
-                if (hv_vm_destroy()) {
-                    //abort();
-                }
+                if (hv_vm_destroy())
+                    {}//throw Core::Exceptions::ProcessorBinaryShutdownException();
             }
 
-            void loadBinary(Core::IBinary* binary)
+            IProcessor* loadBinary(Core::IBinary* binary)
             {
                 binary->printDetails();
 
                 for(auto blob: binary->getBinaryBlobs())
                 {
                     auto memory = valloc(blob.length);
+                    memcpy(memory, binary->getBinaryData() + blob.source, blob.length);
 
                     //TODO: Setup Flags
-                    //TODO: Copy section into buffer, and map that to the vm
                     //TODO: Free this on shutdown
 
                     if (
@@ -70,12 +70,11 @@ namespace Hypervisor
                             blob.length,
                             HV_MEMORY_READ | HV_MEMORY_WRITE | HV_MEMORY_EXEC
                         )
-                    )
-                    {
-                        //abort();
-                    }
-
+                    ) throw Core::Exceptions::ProcessorBinaryStartupException();
                 }
+
+
+                return this;
             }
 
             std::future<int> runAsync(Core::IKernel* kernel)
@@ -102,27 +101,21 @@ namespace Hypervisor
             Processor()
             {
                 /* create a VM instance for the current task */
-                if (hv_vm_create(HV_VM_DEFAULT)) {
-                    //abort();
-                }
+                if (hv_vm_create(HV_VM_DEFAULT))
+                    throw Core::Exceptions::ProcessorStartupException();
                 
                 /* get hypervisor enforced capabilities of the machine, (see Intel docs) */
-                if (hv_vmx_read_capability(HV_VMX_CAP_PINBASED, &vmx_cap_pinbased)) {
-                    //abort();
-                }
-                if (hv_vmx_read_capability(HV_VMX_CAP_PROCBASED, &vmx_cap_procbased)) {
-                    //abort();
-                }
-                if (hv_vmx_read_capability(HV_VMX_CAP_PROCBASED2, &vmx_cap_procbased2)) {
-                    //abort();
-                }
-                if (hv_vmx_read_capability(HV_VMX_CAP_ENTRY, &vmx_cap_entry)) {
-                    //abort();
-                }
+                if (hv_vmx_read_capability(HV_VMX_CAP_PINBASED, &vmx_cap_pinbased))
+                    throw Core::Exceptions::ProcessorStartupException();
+                if (hv_vmx_read_capability(HV_VMX_CAP_PROCBASED, &vmx_cap_procbased))
+                    throw Core::Exceptions::ProcessorStartupException();
+                if (hv_vmx_read_capability(HV_VMX_CAP_PROCBASED2, &vmx_cap_procbased2))
+                    throw Core::Exceptions::ProcessorStartupException();
+                if (hv_vmx_read_capability(HV_VMX_CAP_ENTRY, &vmx_cap_entry))
+                    throw Core::Exceptions::ProcessorStartupException();
 
-                if (hv_vcpu_create(&vcpu, HV_VCPU_DEFAULT)) {
-                    //abort();
-                }
+                if (hv_vcpu_create(&vcpu, HV_VCPU_DEFAULT))
+                    throw Core::Exceptions::ProcessorStartupException();
             }
 
             static void free_memory(void* mem)

@@ -13,14 +13,22 @@
 #include <unistd.h>
 
 int process(
-    Core::IProcessor* processor,
-    Core::IKernel* kernel,
-    Core::IBinary* binary
+    Core::IProcessorLoader* processorLoader,
+    Core::IKernelLoader* kernelLoader, //IMPROVEMENT: Possibly support N Number of kernels, and only use the "most compatible version?"
+                            // for example, use linux stubs if it fits, or use freebsd if it does?
+    Core::IBinaryLoader* binaryLoader //IMPROVEMENT: Possibly support N Number of binary formats, and use the "most compatible version?"
+                            // for example, use elf64 if it's correct or macho if it's correct
 )
 {
-    processor->loadBinary(binary);
+    //TODO: run these in async of eachother.
+    auto processor = processorLoader->loadAsync().get();
+    auto kernel = kernelLoader->loadAsync().get();
+    auto binary = binaryLoader->loadAsync().get();
 
-    return processor->runAsync(kernel).get();
+    return processor
+        ->loadBinary(binary.get())
+        ->runAsync(kernel.get())
+        .get();
 }
 
 /**
@@ -37,23 +45,18 @@ int main(int argc, const char * argv[]) {
     //  Besides the modules knowing about themselves in their code, this method is the only place that
     //  knows about anything outside of the core namespace. So if we pull these loaders dynamically,
     //  we can really keep things self contained, abstract, and configurable.
-    auto processorLoader = Hypervisor::Loader(); // use hypervisor processor module.
-    auto kernelLoader = Linux::Loader(); // use linux kernel module.
-    auto binaryLoader = Elf64::Loader(); // use elf binary module.
     auto processorConfig = Hypervisor::Config(); // use hypervisor processor module.
     auto kernelConfig = Linux::Config(); // use linux kernel module.
     auto binaryConfig = Elf64::Config(
         "/Users/nathanmentley/Documents/Projects/ElfLoader/data/cat"
     ); // use elf binary module.
-
-    //TODO: run these in async of eachother.
-    auto processor = processorLoader.loadAsync(&processorConfig).get();
-    auto kernel = kernelLoader.loadAsync(&kernelConfig).get();
-    auto binary = binaryLoader.loadAsync(&binaryConfig).get();
+    auto processorLoader = Hypervisor::Loader(&processorConfig); // use hypervisor processor module.
+    auto kernelLoader = Linux::Loader(&kernelConfig); // use linux kernel module.
+    auto binaryLoader = Elf64::Loader(&binaryConfig); // use elf binary module.
 
     return process(
-        processor.get(),
-        kernel.get(),
-        binary.get()
+        &processorLoader,
+        &kernelLoader,
+        &binaryLoader
     );
 }

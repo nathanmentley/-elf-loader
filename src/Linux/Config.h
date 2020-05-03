@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "../Core/IKernelConfig.h"
+#include "../Core/IPluginConfig.h"
 
 namespace Linux
 {
-    class Config: public Core::IKernelConfig {
+    class Config: public Core::IPluginConfig {
         public:
             Config()
             {

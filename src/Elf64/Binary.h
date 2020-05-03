@@ -65,7 +65,7 @@ namespace Elf64
                     int endOfProgramHeader = sizeof(Elf64Header) + (sizeof(Elf64ProgramHeader) * hdr.e_phnum);
                     int sizeOfSectionHeaders = (sizeof(Elf64SectionHeader) * hdr.e_shnum);
 
-                    auto ret = std::unique_ptr<Binary>(new Binary(size - endOfProgramHeader - sizeOfSectionHeaders));
+                    auto ret = std::unique_ptr<Binary>(new Binary(size));
                     std::memcpy(&ret->header, (void*)&hdr, sizeof(Elf64Header));
 
                     for(int i = 0; i < hdr.e_phnum; i++)
@@ -87,8 +87,8 @@ namespace Elf64
                     }
 
                     std::copy(
-                        buffer.begin() + endOfProgramHeader,
-                        buffer.begin() + (size - endOfProgramHeader - sizeOfSectionHeaders),
+                        buffer.begin(),
+                        buffer.end(),
                         ret->binary.begin()
                     );
 
@@ -98,7 +98,12 @@ namespace Elf64
                 throw ElfParsingException();
             }
 
-            void* getBinaryData()
+            char* getEntryPoint()
+            {
+                return (char*)header.e_entry;
+            }
+
+            char* getBinaryData()
             {
                 return binary.data();
             }
@@ -109,13 +114,16 @@ namespace Elf64
 
                 for(auto const & sh: section_headers)
                 {
-                   ret.push_back(
-                       Core::BinaryBlobDef(
-                           sh->sh_size,
-                           sh->sh_offset,
-                           sh->sh_addr
-                       )
-                   );
+                    if (sh->sh_type != 0x1)
+                        continue;
+
+                    ret.push_back(
+                        Core::BinaryBlobDef(
+                            sh->sh_size,
+                            sh->sh_offset,
+                            sh->sh_addr
+                        )
+                    );
                 }
 
                 return ret;
@@ -145,6 +153,10 @@ namespace Elf64
                 for (auto const & sh: section_headers)
                 {
                     std::cout << "elf section header: \n\n";
+                    std::cout << "\ttype: 0x" << std::hex << sh->sh_type << "\n";
+                    std::cout << "\toffset: 0x" << std::hex << sh->sh_offset << "\n";
+                    std::cout << "\taddr: 0x" << std::hex << sh->sh_addr << "\n";
+                    std::cout << "\tsize: " << std::dec << sh->sh_size << "\n";
                 }
             }
         private:
