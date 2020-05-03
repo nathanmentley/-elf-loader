@@ -11,10 +11,11 @@
 #include <vector>
 
 #include "BinaryBlobDef.h"
+#include "IPlugin.h"
 
 namespace Core
 {
-    class IBinary
+    class IBinary: public IPlugin
     {
         public:
             virtual void printDetails() = 0;

@@ -1,5 +1,5 @@
 //
-//  IKernel.h
+//  IBinaryConfig.h
 //  elf-loader
 //
 //  Created by Nathan Mentley on 4/29/20.
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "IPlugin.h"
+#include "IPluginConfig.h"
 
 namespace Core
 {
-    class IKernel: public IPlugin
+    class IBinaryConfig: public IPluginConfig
     {
         public:
-            virtual ~IKernel() {}
+            virtual ~IBinaryConfig() {}
     };
 }

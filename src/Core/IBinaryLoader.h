@@ -12,14 +12,22 @@
 #include <future>
 
 #include "IBinary.h"
+#include "IBinaryConfig.h"
+#include "IPluginLoader.h"
 
 namespace Core
 {
-    class IBinaryLoader
+    template <class TPluginConfig>
+    class IBinaryLoader: public IPluginLoader<IBinary, TPluginConfig>
     {
         public:
-            virtual std::unique_ptr<IBinary> loadBinary(const char* filename) = 0;
-            virtual std::future<std::unique_ptr<IBinary>> loadBinaryAsync(const char* filename) = 0;
+            IBinaryLoader()
+            {
+                static_assert(
+                    std::is_base_of<IBinaryConfig, TPluginConfig>::value,
+                    "type parameter TPluginConfig must derive from IPluginConfig"
+                );
+            }
             virtual ~IBinaryLoader() {}
     };
 }

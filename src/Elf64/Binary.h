@@ -105,7 +105,20 @@ namespace Elf64
 
             std::vector<Core::BinaryBlobDef> getBinaryBlobs()
             {
-                return std::vector<Core::BinaryBlobDef>();
+                auto ret = std::vector<Core::BinaryBlobDef>();
+
+                for(auto const & sh: section_headers)
+                {
+                   ret.push_back(
+                       Core::BinaryBlobDef(
+                           sh->sh_size,
+                           sh->sh_offset,
+                           sh->sh_addr
+                       )
+                   );
+                }
+
+                return ret;
             }
 
             void printDetails()
@@ -122,14 +135,14 @@ namespace Elf64
                     << "\tsh count: " << std::dec << header.e_shnum << "\n"
                     << "\tsh size: " << std::dec << header.e_shentsize << "\n\n";
 
-                for (auto&& ph: program_headers)
+                for (auto const & ph: program_headers)
                 {
                     std::cout << "elf program header: \n\n";
                     std::cout << "\tp type: 0x" << std::hex << ph->p_type << "\n";
                     std::cout << "\tp offset: 0x" << std::hex << ph->p_offset << "\n\n";
                 }
 
-                for (auto&& sh: section_headers)
+                for (auto const & sh: section_headers)
                 {
                     std::cout << "elf section header: \n\n";
                 }

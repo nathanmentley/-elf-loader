@@ -13,23 +13,14 @@
 #include <unistd.h>
 
 int process(
-    const char* filename,
-    Core::IProcessorLoader* processorLoader,
-    Core::IKernelLoader* kernelLoader,
-    Core::IBinaryLoader* binaryLoader
+    Core::IProcessor* processor,
+    Core::IKernel* kernel,
+    Core::IBinary* binary
 )
 {
-    auto processorTask = processorLoader->loadProcessorAsync();
-    auto kernelTask = kernelLoader->loadKernelAsync();
-    auto binaryTask = binaryLoader->loadBinaryAsync(filename);
+    processor->loadBinary(binary);
 
-    auto processor = processorTask.get();
-    auto kernel = kernelTask.get();
-    auto binary = binaryTask.get();
-
-    processor->loadBinary(binary.get());
-
-    return processor->runAsync(kernel.get()).get();
+    return processor->runAsync(kernel).get();
 }
 
 /**
@@ -49,11 +40,20 @@ int main(int argc, const char * argv[]) {
     auto processorLoader = Hypervisor::Loader(); // use hypervisor processor module.
     auto kernelLoader = Linux::Loader(); // use linux kernel module.
     auto binaryLoader = Elf64::Loader(); // use elf binary module.
+    auto processorConfig = Hypervisor::Config(); // use hypervisor processor module.
+    auto kernelConfig = Linux::Config(); // use linux kernel module.
+    auto binaryConfig = Elf64::Config(
+        "/Users/nathanmentley/Documents/Projects/ElfLoader/data/cat"
+    ); // use elf binary module.
+
+    //TODO: run these in async of eachother.
+    auto processor = processorLoader.loadAsync(&processorConfig).get();
+    auto kernel = kernelLoader.loadAsync(&kernelConfig).get();
+    auto binary = binaryLoader.loadAsync(&binaryConfig).get();
 
     return process(
-        "/Users/nathanmentley/Documents/Projects/ElfLoader/data/cat",
-        &processorLoader,
-        &kernelLoader,
-        &binaryLoader
+        processor.get(),
+        kernel.get(),
+        binary.get()
     );
 }

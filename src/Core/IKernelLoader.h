@@ -8,18 +8,23 @@
 
 #pragma once
 
-#include <memory>
-#include <future>
-
 #include "IKernel.h"
+#include "IKernelConfig.h"
+#include "IPluginLoader.h"
 
 namespace Core
 {
-    class IKernelLoader
+    template <class TPluginConfig>
+    class IKernelLoader: public IPluginLoader<IKernel, TPluginConfig>
     {
         public:
-            virtual std::unique_ptr<IKernel> loadKernel() = 0;
-            virtual std::future<std::unique_ptr<IKernel>> loadKernelAsync() = 0;
+            IKernelLoader()
+            {
+                static_assert(
+                    std::is_base_of<IKernelConfig, TPluginConfig>::value,
+                    "type parameter TPluginConfig must derive from IPluginConfig"
+                );
+            }
             virtual ~IKernelLoader() {}
     };
 }

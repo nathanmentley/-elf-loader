@@ -9,21 +9,23 @@
 #pragma once
 
 #include "../Core/IProcessorLoader.h"
+
+#include "Config.h"
 #include "Processor.h"
 
 namespace Hypervisor
 {
-    class Loader: public Core::IProcessorLoader
+    class Loader: public Core::IProcessorLoader<Config>
     {
         public:
-            std::unique_ptr<Core::IProcessor> loadProcessor()
+            std::unique_ptr<Core::IProcessor> load(Config* config)
             {
                 return Processor::create();
             }
 
-            std::future<std::unique_ptr<Core::IProcessor>> loadProcessorAsync()
+            std::future<std::unique_ptr<Core::IProcessor>> loadAsync(Config* config)
             {
-                return std::async(std::launch::async, &Loader::loadProcessor, this);
+                return std::async(std::launch::async, &Loader::load, this, config);
             }
 
             ~Loader() {}

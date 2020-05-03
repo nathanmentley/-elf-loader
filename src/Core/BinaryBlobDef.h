@@ -17,5 +17,14 @@ namespace Core
         uint64_t length;
         uint64_t source;
         uint64_t target;
+
+        BinaryBlobDef(
+            uint64_t _length,
+            uint64_t _source,
+            uint64_t _target
+        ):
+            length(_length),
+            source(_source),
+            target(_target) {}
     };
 }

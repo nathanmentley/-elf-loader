@@ -12,10 +12,11 @@
 
 #include "IBinary.h"
 #include "IKernel.h"
+#include "IPlugin.h"
 
 namespace Core
 {
-    class IProcessor
+    class IProcessor: public IPlugin
     {
         public:
             virtual void loadBinary(IBinary* binary) = 0;
