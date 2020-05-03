@@ -25,7 +25,7 @@ namespace Hypervisor
 
             std::unique_ptr<Core::IProcessor> load()
             {
-                return Processor::create();
+                return std::unique_ptr<Processor>(new Processor());
             }
 
             std::future<std::unique_ptr<Core::IProcessor>> loadAsync()

@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include <future>
-#include <memory>
-
 #include "../Core/IKernel.h"
 
 namespace Linux
@@ -22,15 +19,5 @@ namespace Linux
             friend class Loader; 
 
             Kernel() {}
-
-            static std::future<std::unique_ptr<Kernel>> createAsync()
-            {
-                return std::async(create);
-            }
-
-            static std::unique_ptr<Kernel> create()
-            {
-                return std::unique_ptr<Kernel>(new Kernel());
-            }
     };
 }

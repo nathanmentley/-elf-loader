@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include <future>
 #include <memory>
 
 #include <Hypervisor/hv.h>
@@ -108,16 +107,6 @@ namespace Hypervisor
 
                 if (hv_vcpu_create(&vcpu, HV_VCPU_DEFAULT))
                     throw Core::Exceptions::ProcessorStartupException();
-            }
-
-            static std::future<std::unique_ptr<Processor>> createAsync()
-            {
-                return std::async(create);
-            }
-
-            static std::unique_ptr<Processor> create()
-            {
-                return std::unique_ptr<Processor>(new Processor());
             }
 
             static void free_memory(void* mem)

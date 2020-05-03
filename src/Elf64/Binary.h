@@ -9,7 +9,6 @@
 #pragma once
 
 #include <fstream>
-#include <future>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -98,17 +97,6 @@ namespace Elf64
             friend class Loader; 
 
             Binary(int binarySize): binary(binarySize) {}
-
-            /**
-             * Loads and parses an Elf64 binary into an Elf64 representation.
-             *
-             * @param filename The filename of the Elf64 file to parse and load.
-             * @return A future of a unqiue pointer to an Elf64 structure.
-             */
-            static std::future<std::unique_ptr<Binary>> loadAsync(const char* filename)
-            {
-                return std::async(load, filename);
-            }
 
             /**
              * Loads and parses an Elf64 binary into an Elf64 representation.

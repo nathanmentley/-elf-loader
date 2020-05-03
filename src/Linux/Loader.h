@@ -21,7 +21,7 @@ namespace Linux
         public:
             std::unique_ptr<Core::IKernel> load()
             {
-                return Kernel::create();
+                return std::unique_ptr<Kernel>(new Kernel());
             }
 
             std::future<std::unique_ptr<Core::IKernel>> loadAsync()

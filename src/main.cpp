@@ -10,8 +10,6 @@
 #include "Hypervisor/Loader.h"
 #include "Linux/Loader.h"
 
-#include <unistd.h>
-
 int process(
     Core::IProcessorLoader* processorLoader,
     Core::IKernelLoader* kernelLoader, //IMPROVEMENT: Possibly support N Number of kernels, and only use the "most compatible version?"
@@ -20,14 +18,13 @@ int process(
                             // for example, use elf64 if it's correct or macho if it's correct
 )
 {
-    //TODO: run these in async of eachother.
-    auto processor = processorLoader->loadAsync().get();
-    auto kernel = kernelLoader->loadAsync().get();
-    auto binary = binaryLoader->loadAsync().get();
+    auto binary = binaryLoader->loadAsync();
+    auto processor = processorLoader->loadAsync();
+    auto kernel = kernelLoader->loadAsync();
 
-    return processor
-        ->loadBinary(binary.get())
-        ->runAsync(kernel.get())
+    return processor.get()
+        ->loadBinary(binary.get().get())
+        ->runAsync(kernel.get().get())
         .get();
 }
 
