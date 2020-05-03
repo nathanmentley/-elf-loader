@@ -27,16 +27,6 @@ namespace Hypervisor
      */
     class Processor: public Core::IProcessor {
         public:
-            static std::future<std::unique_ptr<Processor>> createAsync()
-            {
-                return std::async(create);
-            }
-
-            static std::unique_ptr<Processor> create()
-            {
-                return std::unique_ptr<Processor>(new Processor());
-            }
-
             ~Processor()
             {
                 if (hv_vcpu_destroy(vcpu))
@@ -95,6 +85,8 @@ namespace Hypervisor
                 return 0;
             }
         private:
+            friend class Loader; 
+
             hv_vcpuid_t vcpu;
             uint64_t vmx_cap_pinbased, vmx_cap_procbased, vmx_cap_procbased2, vmx_cap_entry;
 
@@ -116,6 +108,16 @@ namespace Hypervisor
 
                 if (hv_vcpu_create(&vcpu, HV_VCPU_DEFAULT))
                     throw Core::Exceptions::ProcessorStartupException();
+            }
+
+            static std::future<std::unique_ptr<Processor>> createAsync()
+            {
+                return std::async(create);
+            }
+
+            static std::unique_ptr<Processor> create()
+            {
+                return std::unique_ptr<Processor>(new Processor());
             }
 
             static void free_memory(void* mem)

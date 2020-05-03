@@ -46,12 +46,11 @@ int main(int argc, const char * argv[]) {
     //  knows about anything outside of the core namespace. So if we pull these loaders dynamically,
     //  we can really keep things self contained, abstract, and configurable.
     auto processorConfig = Hypervisor::Config(); // use hypervisor processor module.
-    auto kernelConfig = Linux::Config(); // use linux kernel module.
     auto binaryConfig = Elf64::Config(
         "/Users/nathanmentley/Documents/Projects/ElfLoader/data/cat"
     ); // use elf binary module.
     auto processorLoader = Hypervisor::Loader(&processorConfig); // use hypervisor processor module.
-    auto kernelLoader = Linux::Loader(&kernelConfig); // use linux kernel module.
+    auto kernelLoader = Linux::Loader(); // use linux kernel module.
     auto binaryLoader = Elf64::Loader(&binaryConfig); // use elf binary module.
 
     return process(

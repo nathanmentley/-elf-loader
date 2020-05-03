@@ -33,6 +33,72 @@ namespace Elf64
             std::vector<char> binary;
             std::vector<std::unique_ptr<Elf64SectionHeader>> section_headers;
 
+            char* getEntryPoint()
+            {
+                return (char*)header.e_entry;
+            }
+
+            char* getBinaryData()
+            {
+                return binary.data();
+            }
+
+            std::vector<Core::BinaryBlobDef> getBinaryBlobs()
+            {
+                auto ret = std::vector<Core::BinaryBlobDef>();
+
+                for(auto const & sh: section_headers)
+                {
+                    if (sh->sh_type != 0x1)
+                        continue;
+
+                    ret.push_back(
+                        Core::BinaryBlobDef(
+                            sh->sh_size,
+                            sh->sh_offset,
+                            sh->sh_addr
+                        )
+                    );
+                }
+
+                return ret;
+            }
+
+            void printDetails()
+            {
+                std::cout << "\n\nelf header: \n\n"
+                    << "\tclass: " << getClassName(header.e_class) << "\n"
+                    << "\tmachine: " << getMachineName(header.e_machine) << "\n"
+                    << "\telf version: 0x" << std::hex << +header.e_version << "\n"
+                    << "\tdata: " << getDataType(header.e_data) << "\n"
+                    << "\ttype: 0x" << std::hex << +header.e_type << "\n"
+                    << "\tentry: 0x" << std::hex << header.e_entry << "\n"
+                    << "\tph count: " << std::dec << header.e_phnum << "\n"
+                    << "\tph size: " << std::dec << header.e_phentsize << "\n"
+                    << "\tsh count: " << std::dec << header.e_shnum << "\n"
+                    << "\tsh size: " << std::dec << header.e_shentsize << "\n\n";
+
+                for (auto const & ph: program_headers)
+                {
+                    std::cout << "elf program header: \n\n";
+                    std::cout << "\tp type: 0x" << std::hex << ph->p_type << "\n";
+                    std::cout << "\tp offset: 0x" << std::hex << ph->p_offset << "\n\n";
+                }
+
+                for (auto const & sh: section_headers)
+                {
+                    std::cout << "elf section header: \n\n";
+                    std::cout << "\ttype: 0x" << std::hex << sh->sh_type << "\n";
+                    std::cout << "\toffset: 0x" << std::hex << sh->sh_offset << "\n";
+                    std::cout << "\taddr: 0x" << std::hex << sh->sh_addr << "\n";
+                    std::cout << "\tsize: " << std::dec << sh->sh_size << "\n";
+                }
+            }
+        private:
+            friend class Loader; 
+
+            Binary(int binarySize): binary(binarySize) {}
+
             /**
              * Loads and parses an Elf64 binary into an Elf64 representation.
              *
@@ -97,73 +163,6 @@ namespace Elf64
 
                 throw ElfParsingException();
             }
-
-            char* getEntryPoint()
-            {
-                return (char*)header.e_entry;
-            }
-
-            char* getBinaryData()
-            {
-                return binary.data();
-            }
-
-            std::vector<Core::BinaryBlobDef> getBinaryBlobs()
-            {
-                auto ret = std::vector<Core::BinaryBlobDef>();
-
-                for(auto const & sh: section_headers)
-                {
-                    if (sh->sh_type != 0x1)
-                        continue;
-
-                    ret.push_back(
-                        Core::BinaryBlobDef(
-                            sh->sh_size,
-                            sh->sh_offset,
-                            sh->sh_addr
-                        )
-                    );
-                }
-
-                return ret;
-            }
-
-            void printDetails()
-            {
-                std::cout << "\n\nelf header: \n\n"
-                    << "\tclass: " << getClassName(header.e_class) << "\n"
-                    << "\tmachine: " << getMachineName(header.e_machine) << "\n"
-                    << "\telf version: 0x" << std::hex << +header.e_version << "\n"
-                    << "\tdata: " << getDataType(header.e_data) << "\n"
-                    << "\ttype: 0x" << std::hex << +header.e_type << "\n"
-                    << "\tentry: 0x" << std::hex << header.e_entry << "\n"
-                    << "\tph count: " << std::dec << header.e_phnum << "\n"
-                    << "\tph size: " << std::dec << header.e_phentsize << "\n"
-                    << "\tsh count: " << std::dec << header.e_shnum << "\n"
-                    << "\tsh size: " << std::dec << header.e_shentsize << "\n\n";
-
-                for (auto const & ph: program_headers)
-                {
-                    std::cout << "elf program header: \n\n";
-                    std::cout << "\tp type: 0x" << std::hex << ph->p_type << "\n";
-                    std::cout << "\tp offset: 0x" << std::hex << ph->p_offset << "\n\n";
-                }
-
-                for (auto const & sh: section_headers)
-                {
-                    std::cout << "elf section header: \n\n";
-                    std::cout << "\ttype: 0x" << std::hex << sh->sh_type << "\n";
-                    std::cout << "\toffset: 0x" << std::hex << sh->sh_offset << "\n";
-                    std::cout << "\taddr: 0x" << std::hex << sh->sh_addr << "\n";
-                    std::cout << "\tsize: " << std::dec << sh->sh_size << "\n";
-                }
-            }
-        private:
-            /**
-             * private ctor - Use load to create an instance
-             */
-            Binary(int binarySize): binary(binarySize) {}
 
             std::string getClassName(uint8_t classValue)
             {

@@ -14,11 +14,7 @@ namespace Hypervisor
 {
     class Config: public Core::IPluginConfig {
         public:
-            Config()
-            {
-            }
-            ~Config()
-            {
-            }
+            Config() {}
+            ~Config() {}
     };
 }

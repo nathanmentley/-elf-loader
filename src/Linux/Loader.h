@@ -11,18 +11,14 @@
 #include "../Core/BasePluginLoader.h"
 #include "../Core/IKernelLoader.h"
 
-#include "Config.h"
 #include "Kernel.h"
 
 namespace Linux
 {
     class Loader:
-        public Core::BasePluginLoader<Core::IKernel, Config>,
         public Core::IKernelLoader
     {
         public:
-            Loader(Config* config): BasePluginLoader(config) {}
-
             std::unique_ptr<Core::IKernel> load()
             {
                 return Kernel::create();

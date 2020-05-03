@@ -17,6 +17,12 @@ namespace Linux
 {
     class Kernel: public Core::IKernel {
         public:
+            ~Kernel() {}
+        private:
+            friend class Loader; 
+
+            Kernel() {}
+
             static std::future<std::unique_ptr<Kernel>> createAsync()
             {
                 return std::async(create);
@@ -25,14 +31,6 @@ namespace Linux
             static std::unique_ptr<Kernel> create()
             {
                 return std::unique_ptr<Kernel>(new Kernel());
-            }
-
-            ~Kernel()
-            {
-            }
-        private:
-            Kernel()
-            {
             }
     };
 }
