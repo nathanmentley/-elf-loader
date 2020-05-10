@@ -8,16 +8,27 @@
 
 #pragma once
 
+#include <memory>
+
 #include "../Core/IKernel.h"
+
+#include "./SystemCalls/SystemCallProcessor.h"
+
+#include "ISystemCallProcessorLoader.h"
+#include "ISystemCallProcessor.h"
 
 namespace Linux
 {
     class Kernel: public Core::IKernel {
         public:
-            ~Kernel() {}
+            ~Kernel();
+            void processInterrupt();
+
         private:
             friend class Loader; 
 
-            Kernel() {}
+            std::unique_ptr<ISystemCallProcessor> processor;
+
+            Kernel(Linux::ISystemCallProcessorLoader* loader);
     };
 }

@@ -1,5 +1,5 @@
 //
-//  IKernelLoader.h
+//  Loader.h
 //  elf-loader
 //
 //  Created by Nathan Mentley on 4/29/20.
@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "../Core/BasePluginLoader.h"
 #include "../Core/IKernelLoader.h"
+
+#include "ISystemCallProcessorLoader.h"
 
 #include "Kernel.h"
 
@@ -19,16 +20,14 @@ namespace Linux
         public Core::IKernelLoader
     {
         public:
-            std::unique_ptr<Core::IKernel> load()
-            {
-                return std::unique_ptr<Kernel>(new Kernel());
-            }
+            Loader();
+            ~Loader();
 
-            std::future<std::unique_ptr<Core::IKernel>> loadAsync()
-            {
-                return std::async(std::launch::async, &Loader::load, this);
-            }
+            std::unique_ptr<Core::IKernel> load();
 
-            ~Loader() {}
+            std::future<std::unique_ptr<Core::IKernel>> loadAsync();
+
+        private:
+            std::unique_ptr<ISystemCallProcessorLoader> systemCallProcessorLoader;
     };
 }

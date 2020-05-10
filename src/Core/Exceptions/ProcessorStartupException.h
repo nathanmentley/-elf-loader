@@ -8,17 +8,17 @@
 
 #pragma once
 
-#include <exception>
-
 #include "ProcessorException.h"
 
 namespace Core::Exceptions
 {
     class ProcessorStartupException: public ProcessorException
     {
-        virtual const char* what() const throw()
-        {
-            return "Processor could not startup";
-        }
+        public:
+            ProcessorStartupException(const char* _message):
+                ProcessorException(_message, code) {}
+
+        private:
+            static const uint16_t code = 0x10;
     };
 }

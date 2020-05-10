@@ -12,13 +12,13 @@
 
 namespace Core::Exceptions
 {
-    class ProcessorException: public BaseException
+    class KernelException: public BaseException
     {
         protected:
-            ProcessorException(const char* _message, uint16_t code):
+            KernelException(const char* _message, uint16_t code):
                 BaseException(_message, source, code) {}
 
         private:
-            static const uint16_t source = 0x30;
+            static const uint16_t source = 0x40;
     };
 }

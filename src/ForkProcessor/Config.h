@@ -10,11 +10,11 @@
 
 #include "../Core/IPluginConfig.h"
 
-namespace Hypervisor
+namespace ForkProcessor
 {
     class Config: public Core::IPluginConfig {
         public:
-            Config() {}
-            ~Config() {}
+            Config();
+            ~Config();
     };
 }

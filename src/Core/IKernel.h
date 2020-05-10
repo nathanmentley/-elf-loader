@@ -16,5 +16,7 @@ namespace Core
     {
         public:
             virtual ~IKernel() {}
+
+            virtual void processInterrupt() = 0;
     };
 }

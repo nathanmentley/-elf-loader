@@ -1,5 +1,5 @@
 //
-//  ProcessorBinaryShutdownException.h
+//  ProcessorStartupException.h
 //  elf-loader
 //
 //  Created by Nathan Mentley on 4/29/20.
@@ -12,13 +12,13 @@
 
 namespace Core::Exceptions
 {
-    class ProcessorBinaryShutdownException: public ProcessorException
+    class ProcessorUnsupportedOperationException: public ProcessorException
     {
         public:
-            ProcessorBinaryShutdownException(const char* _message):
+            ProcessorUnsupportedOperationException(const char* _message):
                 ProcessorException(_message, code) {}
 
         private:
-            static const uint16_t code = 0x21;
+            static const uint16_t code = 0x30;
     };
 }
