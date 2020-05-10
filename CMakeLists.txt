@@ -33,8 +33,43 @@ function(update_deps_file deps)
     include(${deps_file})
 endfunction(update_deps_file)
 
-file(GLOB_RECURSE sources LIST_DIRECTORIES false src/*.cpp)
-update_deps_file("${sources}")
-add_executable(ElfLoader ${sources})
+file(GLOB_RECURSE sourcesCore LIST_DIRECTORIES false src/ElfLoader/Core/*.cpp)
+update_deps_file("${sourcesCore}")
+add_library(ElfLoaderCore SHARED ${sourcesCore})
 
+file(GLOB_RECURSE sourcesElf64 LIST_DIRECTORIES false src/ElfLoader/Elf64/*.cpp)
+update_deps_file("${sourcesElf64}")
+add_library(ElfLoaderElf64 SHARED ${sourcesElf64})
+
+file(GLOB_RECURSE sourcesForkProcessor LIST_DIRECTORIES false src/ElfLoader/ForkProcessor/*.cpp)
+update_deps_file("${sourcesForkProcessor}")
+add_library(ElfLoaderForkProcessor SHARED ${sourcesForkProcessor})
+
+file(GLOB_RECURSE sourcesLinux LIST_DIRECTORIES false src/ElfLoader/Linux/*.cpp)
+update_deps_file("${sourcesLinux}")
+add_library(ElfLoaderLinux SHARED ${sourcesLinux})
+
+file(GLOB_RECURSE sourcesExec LIST_DIRECTORIES false src/ElfLoader/Cli/*.cpp)
+update_deps_file("${sourcesExec}")
+add_executable(ElfLoader ${sourcesExec})
+
+target_include_directories(ElfLoaderCore PRIVATE src)
+target_include_directories(ElfLoaderElf64 PRIVATE src)
+target_include_directories(ElfLoaderForkProcessor PRIVATE src)
+target_include_directories(ElfLoaderLinux PRIVATE src)
+target_include_directories(ElfLoader PRIVATE src)
+
+target_link_libraries (ElfLoaderElf64 LINK_PUBLIC ElfLoaderCore)
+target_link_libraries (ElfLoaderForkProcessor LINK_PUBLIC ElfLoaderCore)
+target_link_libraries (ElfLoaderLinux LINK_PUBLIC ElfLoaderCore)
+
+target_link_libraries (ElfLoader LINK_PUBLIC ElfLoaderCore)
+target_link_libraries (ElfLoader LINK_PUBLIC ElfLoaderElf64)
+target_link_libraries (ElfLoader LINK_PUBLIC ElfLoaderForkProcessor)
+target_link_libraries (ElfLoader LINK_PUBLIC ElfLoaderLinux)
+
+set_property(TARGET ElfLoaderCore PROPERTY CXX_STANDARD 20)
+set_property(TARGET ElfLoaderElf64 PROPERTY CXX_STANDARD 20)
+set_property(TARGET ElfLoaderForkProcessor PROPERTY CXX_STANDARD 20)
+set_property(TARGET ElfLoaderLinux PROPERTY CXX_STANDARD 20)
 set_property(TARGET ElfLoader PROPERTY CXX_STANDARD 20)
