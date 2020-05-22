@@ -12,6 +12,10 @@
 
 void Linux::SystemCalls::SystemCallProcessor::process(SystemCall call)
 {
+    throw new Core::Exceptions::ProcessorUnsupportedOperationException(
+        "Inside linux system call translation layer. Not supported."
+    );
+
     switch (call)
     {
         case SystemCall::sys_read:

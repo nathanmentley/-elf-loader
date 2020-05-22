@@ -6,6 +6,8 @@
 //  Copyright © 2020 Nathan Mentley. All rights reserved.
 //
 
+#pragma once
+
 #include <ElfLoader/Core/BasePluginLoader.h>
 #include <ElfLoader/Core/IBinaryLoader.h>
 

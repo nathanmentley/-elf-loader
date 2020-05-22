@@ -37,6 +37,9 @@ file(GLOB_RECURSE sourcesCore LIST_DIRECTORIES false src/ElfLoader/Core/*.cpp)
 update_deps_file("${sourcesCore}")
 add_library(ElfLoaderCore SHARED ${sourcesCore})
 
+find_package(glog 0.4.0 REQUIRED)
+target_link_libraries(ElfLoaderCore glog::glog)
+
 file(GLOB_RECURSE sourcesElf64 LIST_DIRECTORIES false src/ElfLoader/Elf64/*.cpp)
 update_deps_file("${sourcesElf64}")
 add_library(ElfLoaderElf64 SHARED ${sourcesElf64})
