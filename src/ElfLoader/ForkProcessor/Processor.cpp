@@ -7,11 +7,13 @@
 //  Copyright © 2020 Nathan Mentley. All rights reserved.
 //
 
+#include <unistd.h>
+
 #include <ElfLoader/ForkProcessor/Processor.h>
 
 ForkProcessor::Processor::~Processor() {}
 
-Core::IProcessor* ForkProcessor::Processor::loadBinary(Core::IBinary* binary)
+Core::IProcessor* ForkProcessor::Processor::withBinary(Core::IBinary* binary)
 {
     binary->printDetails();
 
@@ -38,6 +40,7 @@ std::future<int> ForkProcessor::Processor::runAsync(Core::IKernel* kernel)
 
 int ForkProcessor::Processor::run(Core::IKernel* kernel)
 {
+    std::cout << "RUN CALL: " << getpid() << std::endl;
     return 0;
 }
 
@@ -62,9 +65,10 @@ pid_t ForkProcessor::Processor::startChildProcess()
 
 void ForkProcessor::Processor::childProcessStartup()
 {
+    sleep(400);
 }
 
-void ForkProcessor::Processor::writeMemoryToPid(int pid, size_t len, vm_address_t src_addr, vm_address_t dest_addr)
+void ForkProcessor::Processor::writeMemoryToPid(pid_t pid, size_t len, vm_address_t src_addr, vm_address_t dest_addr)
 {
     mach_port_t process_to_write;
     kern_return_t error;

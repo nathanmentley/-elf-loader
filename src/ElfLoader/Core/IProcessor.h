@@ -19,7 +19,7 @@ namespace Core
     class IProcessor: public IPlugin
     {
         public:
-            virtual IProcessor* loadBinary(IBinary* binary) = 0;
+            virtual IProcessor* withBinary(IBinary* binary) = 0;
             virtual std::future<int> runAsync(IKernel* kernel) = 0;
             virtual int run(IKernel* kernel) = 0;
             virtual ~IProcessor() {}

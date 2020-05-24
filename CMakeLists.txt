@@ -40,6 +40,9 @@ add_library(ElfLoaderCore SHARED ${sourcesCore})
 find_package(glog 0.4.0 REQUIRED)
 target_link_libraries(ElfLoaderCore glog::glog)
 
+find_package(Boost 1.72 REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
 file(GLOB_RECURSE sourcesElf64 LIST_DIRECTORIES false src/ElfLoader/Elf64/*.cpp)
 update_deps_file("${sourcesElf64}")
 add_library(ElfLoaderElf64 SHARED ${sourcesElf64})

@@ -16,7 +16,7 @@ namespace Core::Exceptions
     {
         protected:
             BinaryException(const char* _message, uint16_t code):
-                BaseException(_message, source, code) {}
+                BaseException(_message, "BinaryException", source, code) {}
 
         private:
             static const uint16_t source = 0x20;

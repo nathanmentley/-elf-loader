@@ -9,6 +9,11 @@
 #pragma once
 
 #include <exception>
+#include <sstream>
+#include <string>
+
+#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
+#include <boost/stacktrace.hpp>
 
 namespace Core::Exceptions
 {
@@ -16,14 +21,26 @@ namespace Core::Exceptions
     {
         public:
             virtual const char* what() const throw();
-            const uint32_t ErrorCode;
+
+            boost::stacktrace::stacktrace get_stacktrace();
+            const char* get_type();
+            const uint32_t get_error_code();
+            std::string to_string();
 
         protected:
-            BaseException(const char* _message, uint16_t _source, uint16_t _code);
+            BaseException(
+                const char* _message,
+                const char* _type,
+                uint16_t _source,
+                uint16_t _code
+            );
 
         private:
+            boost::stacktrace::stacktrace stacktrace;
+            const char* type;
             const char* message;
             const uint16_t source;
             const uint16_t code;
+            const uint32_t error_code;
     };
 }

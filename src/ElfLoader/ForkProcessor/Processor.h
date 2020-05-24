@@ -31,7 +31,7 @@ namespace ForkProcessor
         public:
             ~Processor();
 
-            IProcessor* loadBinary(Core::IBinary* binary);
+            IProcessor* withBinary(Core::IBinary* binary);
 
             std::future<int> runAsync(Core::IKernel* kernel);
 
@@ -47,6 +47,6 @@ namespace ForkProcessor
 
             static void childProcessStartup();
 
-            void writeMemoryToPid(int pid, size_t len, vm_address_t src_addr, vm_address_t dest_addr);
+            void writeMemoryToPid(pid_t pid, size_t len, vm_address_t src_addr, vm_address_t dest_addr);
     };
 }

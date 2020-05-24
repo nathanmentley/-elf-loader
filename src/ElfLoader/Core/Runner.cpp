@@ -23,7 +23,7 @@ int Core::Runner::process(
     auto kernel = kernelTask.get();
 
     auto resultTask = processor
-        ->loadBinary(binary.get())
+        ->withBinary(binary.get())
         ->runAsync(kernel.get());
 
     return resultTask.get();

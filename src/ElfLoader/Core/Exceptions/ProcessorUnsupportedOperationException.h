@@ -16,7 +16,7 @@ namespace Core::Exceptions
     {
         public:
             ProcessorUnsupportedOperationException(const char* _message):
-                ProcessorException(_message, code) {}
+                ProcessorException(_message, "ProcessorUnsupportedOperationException", code) {}
 
         private:
             static const uint16_t code = 0x30;

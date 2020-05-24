@@ -15,8 +15,8 @@ namespace Core::Exceptions
     class ProcessorException: public BaseException
     {
         protected:
-            ProcessorException(const char* _message, uint16_t code):
-                BaseException(_message, source, code) {}
+            ProcessorException(const char* _message, const char* _type, uint16_t code):
+                BaseException(_message, _type, source, code) {}
 
         private:
             static const uint16_t source = 0x30;

@@ -13,7 +13,7 @@ ForkProcessor::Bootloader::Bootloader() {}
 ForkProcessor::Bootloader::~Bootloader() {}
 
 char* ForkProcessor::Bootloader::GetData() {
-    return 0;
+    return (char*)data;
 }
 
 int ForkProcessor::Bootloader::GetLength() {
