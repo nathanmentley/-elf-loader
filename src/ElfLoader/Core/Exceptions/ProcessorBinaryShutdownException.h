@@ -15,8 +15,7 @@ namespace Core::Exceptions
     class ProcessorBinaryShutdownException: public ProcessorException
     {
         public:
-            ProcessorBinaryShutdownException(const char* _message):
-                ProcessorException(_message, "ProcessorBinaryShutdownException", code) {}
+            ProcessorBinaryShutdownException(const char* _message);
 
         private:
             static const uint16_t code = 0x21;

@@ -15,6 +15,8 @@
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>
 
+#include <ElfLoader/Core/TerminalColors.h>
+
 namespace Core::Exceptions
 {
     class BaseException: public std::exception

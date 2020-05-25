@@ -46,22 +46,16 @@ std::string Core::Exceptions::BaseException::to_string()
     std::stringstream ss;
 
     ss << "An exception of type ["
-        << "\033[1;31m"
-        << type
-        << "\033[0m"
+        << Core::TerminalColors::WithErrorFormatting(type)
         << "] and code ["
-        << "\033[1;33m"
-        << error_code
-        << "\033[0m"
+        << Core::TerminalColors::WithErrorFormatting(error_code)
         << "] occured with the message: "
-        << "\033[1;36m"
-        << message
-        << "\033[0m"
+        << Core::TerminalColors::WithInfoFormatting(message)
         << std::endl
         << std::endl
-        << "\033[1;34m"
-        << stacktrace
-        << "\033[0m";
+        << "Stacktrace:"
+        << std::endl
+        << Core::TerminalColors::WithInfoFormatting(stacktrace);
 
     return ss.str();
 }

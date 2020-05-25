@@ -6,10 +6,11 @@
 //  Copyright © 2020 Nathan Mentley. All rights reserved.
 //
 
+#pragma once
+
 #include <ElfLoader/Core/IProcessorLoader.h>
 #include <ElfLoader/Core/IKernelLoader.h>
 #include <ElfLoader/Core/IBinaryLoader.h>
-
 
 namespace Core
 {

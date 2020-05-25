@@ -15,8 +15,7 @@ namespace Core::Exceptions
     class ProcessorStartupException: public ProcessorException
     {
         public:
-            ProcessorStartupException(const char* _message):
-                ProcessorException(_message, "ProcessorStartupException", code) {}
+            ProcessorStartupException(const char* _message);
 
         private:
             static const uint16_t code = 0x10;

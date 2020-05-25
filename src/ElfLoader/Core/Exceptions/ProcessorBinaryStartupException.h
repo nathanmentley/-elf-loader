@@ -15,8 +15,7 @@ namespace Core::Exceptions
     class ProcessorBinaryStartupException: public ProcessorException
     {
         public:
-            ProcessorBinaryStartupException(const char* _message):
-                ProcessorException(_message, "ProcessorBinaryStartupException", code) {}
+            ProcessorBinaryStartupException(const char* _message);
 
         private:
             static const uint16_t code = 0x11;

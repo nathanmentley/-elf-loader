@@ -1,5 +1,5 @@
 //
-//  ProcessorStartupException.h
+//  ProcessorUnsupportedOperationException.h
 //  elf-loader
 //
 //  Created by Nathan Mentley on 4/29/20.
@@ -15,8 +15,7 @@ namespace Core::Exceptions
     class ProcessorUnsupportedOperationException: public ProcessorException
     {
         public:
-            ProcessorUnsupportedOperationException(const char* _message):
-                ProcessorException(_message, "ProcessorUnsupportedOperationException", code) {}
+            ProcessorUnsupportedOperationException(const char* _message);
 
         private:
             static const uint16_t code = 0x30;
